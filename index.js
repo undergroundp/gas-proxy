@@ -40,3 +40,15 @@ app.post('/tasks', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Proxy server listening on port ${PORT}`);
 });
+
+app.get('/tasks', async (req, res) => {
+  try {
+    const response = await fetch(GAS_URL);
+    const text = await response.text(); // change from .json() to .text() for debugging
+    console.log('GAS raw response:', text);
+    res.type('json').send(text);
+  } catch (err) {
+    console.error('GET error:', err);
+    res.status(500).json({ error: 'Failed to fetch tasks from Google Apps Script' });
+  }
+});
